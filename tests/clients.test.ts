@@ -1,3 +1,4 @@
+import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import {
   denormalizeEntry,
@@ -118,9 +119,9 @@ describe("getClients", () => {
   it("resolves paths under the provided home", () => {
     const clients = getClients("/fake/home", "/fake/data");
     const byId = Object.fromEntries(clients.map((c) => [c.id, c]));
-    expect(byId["claude-code"]!.configPath).toBe("/fake/home/.claude.json");
-    expect(byId["claude-desktop"]!.configPath).toContain("/fake/data/Claude");
-    expect(byId["cursor"]!.configPath).toBe("/fake/home/.cursor/mcp.json");
+    expect(byId["claude-code"]!.configPath).toBe(join("/fake/home", ".claude.json"));
+    expect(byId["claude-desktop"]!.configPath).toContain(join("/fake/data", "Claude"));
+    expect(byId["cursor"]!.configPath).toBe(join("/fake/home", ".cursor", "mcp.json"));
     expect(clients.length).toBeGreaterThanOrEqual(7);
   });
 
