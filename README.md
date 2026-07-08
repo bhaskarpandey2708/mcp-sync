@@ -7,6 +7,8 @@
 
 **One command to keep your MCP servers in sync across every AI tool you use.**
 
+![mcp-sync demo: status shows drift, sync --from cursor fixes it with backups](demo/demo.gif)
+
 You added your MCP servers to Claude Desktop. Then you set them up again in Cursor. Then again in Claude Code, VS Code, Windsurf... and now they've all drifted apart — different versions, different flags, one missing an API key.
 
 `mcp-sync` fixes that:
