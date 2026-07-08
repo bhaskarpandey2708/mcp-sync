@@ -1,5 +1,10 @@
 # mcp-sync
 
+[![CI](https://github.com/bhaskarpandey2708/mcp-sync/actions/workflows/ci.yml/badge.svg)](https://github.com/bhaskarpandey2708/mcp-sync/actions/workflows/ci.yml)
+[![npm](https://img.shields.io/npm/v/mcp-sync)](https://www.npmjs.com/package/mcp-sync)
+[![zero dependencies](https://img.shields.io/badge/dependencies-0-brightgreen)](package.json)
+[![license: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+
 **One command to keep your MCP servers in sync across every AI tool you use.**
 
 You added your MCP servers to Claude Desktop. Then you set them up again in Cursor. Then again in Claude Code, VS Code, Windsurf... and now they've all drifted apart — different versions, different flags, one missing an API key.
