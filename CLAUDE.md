@@ -32,7 +32,7 @@ CI (`.github/workflows/ci.yml`): Linux/macOS/Windows × Node 20/22/24. Node 18 i
 
 ## Publish status (2026-07-08)
 
-Done: username placeholders filled (bhaskarpandey2708), git repo pushed to GitHub with topics, 4 good-first-issues open (#1 Codex TOML, #2 Zed, #3 Cline, #4 interactive mode), CI green on Linux/macOS/Windows, vitest upgraded to v4 (0 audit findings). Remaining (owner-only): `npm login && npm publish`, then verify `npx mcp-sync@latest status` cold.
+Done: username placeholders filled (bhaskarpandey2708), git repo pushed to GitHub with topics, 4 good-first-issues open (#1 Codex TOML, #2 Zed, #3 Cline, #4 interactive mode), CI green on Linux/macOS/Windows, vitest upgraded to v4 (0 audit findings), v0.1.0 tagged + GitHub release published, README badges, demo GIF recorded (`demo/demo.gif`, re-record with `vhs demo/demo.tape`), launch posts drafted in `../launch-assets.md`. Remaining (owner-only): `npm login && npm publish`, then verify `npx mcp-sync@latest status` cold — **do this before any launch posts go out**.
 
 ## Roadmap (in priority order)
 
