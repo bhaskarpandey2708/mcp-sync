@@ -1,0 +1,111 @@
+# mcp-sync
+
+**One command to keep your MCP servers in sync across every AI tool you use.**
+
+You added your MCP servers to Claude Desktop. Then you set them up again in Cursor. Then again in Claude Code, VS Code, Windsurf... and now they've all drifted apart — different versions, different flags, one missing an API key.
+
+`mcp-sync` fixes that:
+
+```bash
+npx mcp-sync status          # see every client and what's out of sync
+npx mcp-sync sync --from cursor   # make everything match Cursor
+```
+
+```
+MCP clients
+  ● Claude Desktop       3 servers
+  ● Claude Code          2 servers
+  ● Cursor               4 servers
+  ● VS Code              1 server
+  ○ Windsurf             not detected
+
+  ⚠ 3 of 4 servers out of sync: exa, github, filesystem
+  Run `mcp-sync diff` for details, `mcp-sync sync --from <client>` to fix.
+```
+
+## Why mcp-sync
+
+- **Zero dependencies.** Nothing in your supply chain but Node built-ins. Fast `npx` cold start.
+- **Safe by default.** Every modified file is backed up to `~/.mcp-sync/backups/<timestamp>/` first. `--dry-run` previews everything. Sync merges — it never deletes servers unless you pass `--prune` or `--replace`.
+- **Preserves your files.** Only the MCP server section is touched. Everything else in `~/.claude.json` or `~/.gemini/settings.json` stays byte-for-byte intact.
+- **Understands each client's dialect.** Plain `mcpServers` for Cursor/Claude Desktop, typed `servers` for VS Code, TOML-free translation between them all. Remote (HTTP/SSE) servers are skipped for clients that can't run them, with a clear warning.
+
+## Supported clients
+
+| Client | Config file |
+|---|---|
+| Claude Desktop | `~/Library/Application Support/Claude/claude_desktop_config.json` (per-OS) |
+| Claude Code | `~/.claude.json` |
+| Cursor | `~/.cursor/mcp.json` |
+| VS Code | `~/Library/Application Support/Code/User/mcp.json` (per-OS) |
+| Windsurf | `~/.codeium/windsurf/mcp_config.json` |
+| Gemini CLI | `~/.gemini/settings.json` |
+| GitHub Copilot CLI | `~/.copilot/mcp-config.json` |
+
+Coming soon (PRs welcome — these are [good first issues](../../issues)): OpenAI Codex CLI (TOML), Zed, Cline, JetBrains.
+
+## Install
+
+No install needed:
+
+```bash
+npx mcp-sync status
+```
+
+Or globally:
+
+```bash
+npm i -g mcp-sync
+```
+
+Requires Node 18.17+.
+
+## Commands
+
+```
+mcp-sync status                    Show detected clients and sync state (default)
+mcp-sync list                      List every MCP server across all clients
+mcp-sync diff                      Show exactly which servers differ and how
+mcp-sync sync --from <client>      Copy servers from one client to all others
+mcp-sync clients                   List supported clients and their config paths
+```
+
+### Sync options
+
+```
+--from <client>      Source of truth (required)
+--to <a,b,...>       Only sync to these clients (default: all detected)
+--dry-run            Preview changes without writing anything
+--replace            Make targets exactly match the source
+--prune              Also delete target servers missing from the source
+```
+
+### Examples
+
+```bash
+# Preview what syncing from Claude Desktop would change
+npx mcp-sync sync --from claude-desktop --dry-run
+
+# Push your Cursor setup to VS Code and Claude Code only
+npx mcp-sync sync --from cursor --to vscode,claude-code
+
+# Nuke-and-pave: make every client exactly match Claude Code
+npx mcp-sync sync --from claude-code --replace
+```
+
+## How sync works
+
+1. Reads the source client's MCP servers and normalizes them to a canonical form.
+2. For each target: **merge** — source servers win on name collisions, extra target servers are kept (unless `--prune`/`--replace`).
+3. Backs up each target file to `~/.mcp-sync/backups/<timestamp>/` before writing.
+4. Writes back in the target's native dialect, preserving every unrelated key in the file.
+
+Restore a backup by copying the file back — backups are plain copies of your original configs.
+
+## Contributing
+
+Issues and PRs are very welcome — especially new client adapters (see [CONTRIBUTING.md](CONTRIBUTING.md)). Adding a client is usually a single entry in `src/clients.ts` plus a test.
+
+## License
+
+[MIT](LICENSE)

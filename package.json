@@ -1,0 +1,56 @@
+{
+  "name": "mcp-sync",
+  "version": "0.1.0",
+  "description": "Keep MCP server configs in sync across Claude Desktop, Claude Code, Cursor, VS Code, Windsurf, Gemini CLI, and GitHub Copilot CLI. Zero dependencies.",
+  "type": "module",
+  "bin": {
+    "mcp-sync": "dist/cli.js"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18.17"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "prepublishOnly": "npm run build && npm test"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "mcp-server",
+    "claude",
+    "claude-desktop",
+    "claude-code",
+    "cursor",
+    "vscode",
+    "windsurf",
+    "gemini-cli",
+    "copilot",
+    "config",
+    "sync",
+    "cli"
+  ],
+  "author": "Bhaskar Pandey <bhaskarauthor@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bhaskarpandey2708/mcp-sync.git"
+  },
+  "bugs": {
+    "url": "https://github.com/bhaskarpandey2708/mcp-sync/issues"
+  },
+  "homepage": "https://github.com/bhaskarpandey2708/mcp-sync#readme",
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "typescript": "^5.5.0",
+    "vitest": "^2.1.0"
+  }
+}
