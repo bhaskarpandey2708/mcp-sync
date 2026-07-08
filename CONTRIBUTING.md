@@ -27,7 +27,7 @@ Clients with non-JSON configs (e.g. Codex CLI's TOML) need a format adapter — 
 - Zero runtime dependencies is a core feature of this project. Dev dependencies are fine.
 - Never touch keys outside the MCP servers section of a user's config file.
 - Any code path that writes a file must go through the backup mechanism.
-- `npm test` and `npm run build` must pass; CI runs on Linux/macOS/Windows × Node 18/20/22.
+- `npm test` and `npm run build` must pass; CI runs on Linux/macOS/Windows × Node 20/22/24.
 
 ## Releasing (maintainers)
 

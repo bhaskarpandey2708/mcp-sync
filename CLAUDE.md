@@ -1,6 +1,6 @@
 # mcp-sync — project context
 
-Zero-dependency TypeScript CLI that syncs MCP server configs across AI clients (Claude Desktop, Claude Code, Cursor, VS Code, Windsurf, Gemini CLI, Copilot CLI). v0.1.0 is complete and tested; not yet published.
+Zero-dependency TypeScript CLI that syncs MCP server configs across AI clients (Claude Desktop, Claude Code, Cursor, VS Code, Windsurf, Gemini CLI, Copilot CLI). v0.1.0 is live at https://github.com/bhaskarpandey2708/mcp-sync (published 2026-07-08); npm publish still pending (requires `npm login`).
 
 ## Purpose
 
@@ -28,11 +28,11 @@ npm install && npm run build && npm test   # build + 27 tests must pass
 node dist/cli.js status                    # manual smoke test
 ```
 
-CI (`.github/workflows/ci.yml`): Linux/macOS/Windows × Node 18/20/22.
+CI (`.github/workflows/ci.yml`): Linux/macOS/Windows × Node 20/22/24. Node 18 is unsupported (EOL; vitest 4 requires Node 20.19+), `engines.node` is `>=20`.
 
-## Before first publish
+## Publish status (2026-07-08)
 
-Replace `YOUR_GITHUB_USERNAME` in `package.json` (3 places) and `CONTRIBUTING.md` (1 place). Then `git init`, push to GitHub, `npm publish` (name confirmed free 2026-07-08).
+Done: username placeholders filled (bhaskarpandey2708), git repo pushed to GitHub with topics, 4 good-first-issues open (#1 Codex TOML, #2 Zed, #3 Cline, #4 interactive mode), CI green on Linux/macOS/Windows, vitest upgraded to v4 (0 audit findings). Remaining (owner-only): `npm login && npm publish`, then verify `npx mcp-sync@latest status` cold.
 
 ## Roadmap (in priority order)
 

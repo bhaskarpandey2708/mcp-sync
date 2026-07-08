@@ -58,7 +58,7 @@ Or globally:
 npm i -g mcp-sync
 ```
 
-Requires Node 18.17+.
+Requires Node 20+.
 
 ## Commands
 
