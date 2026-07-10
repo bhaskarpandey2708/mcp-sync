@@ -9,6 +9,16 @@ import type {
   TransportType,
 } from "./types.js";
 
+/** Keys we model explicitly; everything else goes into `extra`. */
+const KNOWN_KEYS = new Set([
+  "type",
+  "command",
+  "args",
+  "env",
+  "url",
+  "headers",
+]);
+
 /** Platform-appropriate application-data directory. */
 export function appDataDir(home: string = homedir()): string {
   if (process.platform === "win32") {
@@ -125,6 +135,15 @@ export function normalizeEntry(raw: unknown): McpServer | null {
     server.url = url;
     if (isStringRecord(r.headers)) server.headers = r.headers;
   }
+
+  // Preserve unknown / client-specific keys so round-trips never strip config.
+  const extra: Record<string, unknown> = {};
+  for (const [k, v] of Object.entries(r)) {
+    if (KNOWN_KEYS.has(k)) continue;
+    extra[k] = v;
+  }
+  if (Object.keys(extra).length > 0) server.extra = extra;
+
   return server;
 }
 
@@ -134,7 +153,12 @@ export function denormalizeEntry(
   style: "plain" | "typed",
 ): Record<string, unknown> {
   const out: Record<string, unknown> = {};
-  if (style === "typed") out.type = server.type;
+  // Typed clients always carry an explicit type. Plain clients usually omit it
+  // for stdio/http (inferred from command/url), but must keep `sse` explicit —
+  // otherwise a round-trip re-infers url-only entries as http and loses sse.
+  if (style === "typed" || server.type === "sse") {
+    out.type = server.type;
+  }
   if (server.type === "stdio") {
     out.command = server.command;
     if (server.args && server.args.length > 0) out.args = server.args;
@@ -145,21 +169,57 @@ export function denormalizeEntry(
       out.headers = server.headers;
     }
   }
+  if (server.extra) {
+    for (const [k, v] of Object.entries(server.extra)) {
+      // Never let extra overwrite modeled keys.
+      if (KNOWN_KEYS.has(k)) continue;
+      out[k] = v;
+    }
+  }
   return out;
 }
 
+export interface ParseResult {
+  servers: ServerMap;
+  warnings: string[];
+}
+
 /** Parse the server map out of a client config document. */
-export function parseServers(rawDoc: string, def: ClientDef): ServerMap {
-  const doc = JSON.parse(rawDoc) as Record<string, unknown>;
+export function parseServers(rawDoc: string, def: ClientDef): ParseResult {
+  const warnings: string[] = [];
+  let doc: Record<string, unknown>;
+  try {
+    doc = JSON.parse(rawDoc) as Record<string, unknown>;
+  } catch (err) {
+    throw new Error(
+      `Invalid JSON: ${err instanceof Error ? err.message : String(err)}`,
+    );
+  }
+
   const section = doc[def.serversKey];
   const servers: ServerMap = {};
-  if (section && typeof section === "object" && !Array.isArray(section)) {
-    for (const [name, entry] of Object.entries(section)) {
-      const normalized = normalizeEntry(entry);
-      if (normalized) servers[name] = normalized;
+  if (section === undefined || section === null) {
+    warnings.push(`no "${def.serversKey}" section found`);
+    return { servers, warnings };
+  }
+  if (typeof section !== "object" || Array.isArray(section)) {
+    warnings.push(`"${def.serversKey}" is not an object — ignored`);
+    return { servers, warnings };
+  }
+
+  for (const [name, entry] of Object.entries(section)) {
+    if (!name.trim()) {
+      warnings.push("skipped server with empty name");
+      continue;
+    }
+    const normalized = normalizeEntry(entry);
+    if (normalized) {
+      servers[name] = normalized;
+    } else {
+      warnings.push(`skipped invalid server entry "${name}" (need command or url)`);
     }
   }
-  return servers;
+  return { servers, warnings };
 }
 
 /**
@@ -190,7 +250,13 @@ export function loadClientState(def: ClientDef): ClientState {
   }
   try {
     const raw = readFileSync(def.configPath, "utf8");
-    return { def, exists: true, servers: parseServers(raw, def) };
+    const { servers, warnings } = parseServers(raw, def);
+    return {
+      def,
+      exists: true,
+      servers,
+      warnings: warnings.length > 0 ? warnings : undefined,
+    };
   } catch (err) {
     return {
       def,

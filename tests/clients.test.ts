@@ -18,7 +18,12 @@ const plainDef: ClientDef = {
   supportsRemote: true,
   docsUrl: "",
 };
-const typedDef: ClientDef = { ...plainDef, id: "vscode", serversKey: "servers", style: "typed" };
+const typedDef: ClientDef = {
+  ...plainDef,
+  id: "vscode",
+  serversKey: "servers",
+  style: "typed",
+};
 
 describe("normalizeEntry", () => {
   it("reads a plain stdio entry", () => {
@@ -38,6 +43,16 @@ describe("normalizeEntry", () => {
     expect(normalizeEntry({ type: "sse", url: "https://x.dev/sse" })?.type).toBe("sse");
   });
 
+  it("preserves unknown fields in extra", () => {
+    const n = normalizeEntry({
+      command: "npx",
+      cwd: "/work",
+      disabled: true,
+      timeout: 30,
+    });
+    expect(n?.extra).toEqual({ cwd: "/work", disabled: true, timeout: 30 });
+  });
+
   it("rejects garbage", () => {
     expect(normalizeEntry(null)).toBeNull();
     expect(normalizeEntry("nope")).toBeNull();
@@ -47,9 +62,18 @@ describe("normalizeEntry", () => {
 });
 
 describe("denormalizeEntry", () => {
-  it("omits type for plain style", () => {
+  it("omits type for plain style stdio/http", () => {
     const out = denormalizeEntry({ type: "stdio", command: "npx", args: ["a"] }, "plain");
     expect(out).toEqual({ command: "npx", args: ["a"] });
+    expect(denormalizeEntry({ type: "http", url: "https://x" }, "plain")).toEqual({
+      url: "https://x",
+    });
+  });
+
+  it("keeps sse type on plain style so round-trips do not become http", () => {
+    const out = denormalizeEntry({ type: "sse", url: "https://x/sse" }, "plain");
+    expect(out).toEqual({ type: "sse", url: "https://x/sse" });
+    expect(normalizeEntry(out)?.type).toBe("sse");
   });
 
   it("includes type for typed style", () => {
@@ -58,8 +82,23 @@ describe("denormalizeEntry", () => {
   });
 
   it("omits empty args/env", () => {
-    const out = denormalizeEntry({ type: "stdio", command: "npx", args: [], env: {} }, "plain");
+    const out = denormalizeEntry(
+      { type: "stdio", command: "npx", args: [], env: {} },
+      "plain",
+    );
     expect(out).toEqual({ command: "npx" });
+  });
+
+  it("re-emits extra fields without overwriting known keys", () => {
+    const out = denormalizeEntry(
+      {
+        type: "stdio",
+        command: "npx",
+        extra: { cwd: "/x", command: "evil", type: "http" },
+      },
+      "plain",
+    );
+    expect(out).toEqual({ command: "npx", cwd: "/x" });
   });
 });
 
@@ -68,13 +107,25 @@ describe("parseServers / renderDoc round-trip", () => {
     const cursorDoc = JSON.stringify({
       mcpServers: { fs: { command: "npx", args: ["-y", "fs-server"] } },
     });
-    expect(Object.keys(parseServers(cursorDoc, plainDef))).toEqual(["fs"]);
+    expect(Object.keys(parseServers(cursorDoc, plainDef).servers)).toEqual(["fs"]);
 
     const vscodeDoc = JSON.stringify({
       servers: { fs: { type: "stdio", command: "npx" } },
       inputs: [],
     });
-    expect(Object.keys(parseServers(vscodeDoc, typedDef))).toEqual(["fs"]);
+    expect(Object.keys(parseServers(vscodeDoc, typedDef).servers)).toEqual(["fs"]);
+  });
+
+  it("warns on invalid entries instead of throwing", () => {
+    const doc = JSON.stringify({
+      mcpServers: {
+        good: { command: "npx" },
+        bad: { noCommand: true },
+      },
+    });
+    const { servers, warnings } = parseServers(doc, plainDef);
+    expect(Object.keys(servers)).toEqual(["good"]);
+    expect(warnings.some((w) => w.includes("bad"))).toBe(true);
   });
 
   it("preserves unrelated keys when rewriting (claude.json-style docs)", () => {
@@ -101,14 +152,20 @@ describe("parseServers / renderDoc round-trip", () => {
     expect(JSON.parse(out)).toEqual({ mcpServers: { fs: { command: "npx" } } });
   });
 
-  it("survives a full round-trip without loss", () => {
+  it("survives a full round-trip without loss including extra fields", () => {
     const original = {
       mcpServers: {
-        fs: { command: "npx", args: ["-y", "server-fs"], env: { ROOT: "/" } },
+        fs: {
+          command: "npx",
+          args: ["-y", "server-fs"],
+          env: { ROOT: "/" },
+          cwd: "/project",
+          disabled: false,
+        },
         api: { url: "https://api.example.com/mcp" },
       },
     };
-    const servers = parseServers(JSON.stringify(original), plainDef);
+    const { servers } = parseServers(JSON.stringify(original), plainDef);
     const out = JSON.parse(renderDoc(JSON.stringify(original), plainDef, servers));
     expect(out.mcpServers.fs).toEqual(original.mcpServers.fs);
     expect(out.mcpServers.api).toEqual(original.mcpServers.api);

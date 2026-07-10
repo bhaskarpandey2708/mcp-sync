@@ -1,7 +1,13 @@
 /** Transport type for an MCP server. */
 export type TransportType = "stdio" | "http" | "sse";
 
-/** Canonical, client-agnostic representation of one MCP server entry. */
+/**
+ * Canonical, client-agnostic representation of one MCP server entry.
+ *
+ * Known fields are modeled explicitly. Anything else a client stores
+ * (cwd, disabled, timeout, envFile, …) is preserved in `extra` so a
+ * sync never silently strips configuration.
+ */
 export interface McpServer {
   type: TransportType;
   /** stdio only */
@@ -11,6 +17,11 @@ export interface McpServer {
   /** http / sse only */
   url?: string;
   headers?: Record<string, string>;
+  /**
+   * Pass-through for client-specific / unknown keys so round-trips are
+   * lossless. Not interpreted by mcp-sync; re-emitted on write.
+   */
+  extra?: Record<string, unknown>;
 }
 
 /** Server name -> canonical definition. */
@@ -42,6 +53,8 @@ export interface ClientState {
   servers: ServerMap;
   /** Parse/read error, if any. */
   error?: string;
+  /** Non-fatal issues (dropped entries, empty sections, etc.). */
+  warnings?: string[];
 }
 
 /** Options for a sync operation. */
@@ -65,4 +78,20 @@ export interface SyncPlan {
   skippedRemote: string[];
   /** True if next differs from current. */
   changed: boolean;
+}
+
+/** Structured result of applying one plan (for CLI + automation). */
+export interface ApplyResult {
+  clientId: string;
+  ok: boolean;
+  backupPath: string | null;
+  error?: string;
+}
+
+/** One issue found by `validate`. */
+export interface ValidationIssue {
+  severity: "error" | "warning" | "info";
+  clientId: string;
+  serverName?: string;
+  message: string;
 }

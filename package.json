@@ -1,7 +1,7 @@
 {
   "name": "mcp-sync",
-  "version": "0.1.0",
-  "description": "Keep MCP server configs in sync across Claude Desktop, Claude Code, Cursor, VS Code, Windsurf, Gemini CLI, and GitHub Copilot CLI. Zero dependencies.",
+  "version": "0.2.0",
+  "description": "Keep MCP server configs in sync across Claude Desktop, Claude Code, Cursor, VS Code, Windsurf, Gemini CLI, and GitHub Copilot CLI. Atomic writes, backups, validate/restore, zero dependencies.",
   "type": "module",
   "bin": {
     "mcp-sync": "dist/cli.js"
@@ -20,6 +20,8 @@
     "build": "tsc -p tsconfig.json",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:matrix": "vitest run tests/param-matrix.test.ts",
+    "test:all": "vitest run",
     "prepublishOnly": "npm run build && npm test"
   },
   "keywords": [
