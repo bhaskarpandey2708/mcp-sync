@@ -7,9 +7,9 @@
 
 **One command to keep your MCP servers in sync across every AI tool you use.**
 
-![mcp-sync demo: status shows drift, sync --from cursor fixes it with backups](demo/demo-1080p-preview.gif)
+![mcp-sync story demo: problem → solution → live fix](demo/demo-story-preview.gif)
 
-[Full 1080p demo video (MP4)](demo/demo-1080p.mp4) — re-record with `vhs demo/demo-1080p.tape`
+[Full 1080p story demo (MP4, ~72s)](demo/demo-story-1080p.mp4) — problem, solution, then live terminal. Rebuild with `sh demo/build-story-demo.sh`.
 
 You added your MCP servers to Claude Desktop. Then you set them up again in Cursor. Then again in Claude Code, VS Code, Windsurf... and now they've all drifted apart — different versions, different flags, one missing an API key.
 
