@@ -90,11 +90,7 @@ ffmpeg -y -i "$RAW" \
   -movflags +faststart -an \
   "$FINAL" </dev/null
 
-# Also update main demo pointer used for launch
-cp -f "$FINAL" "$ROOT/demo/demo-1080p.mp4"
-cp -f "$FINAL" "$ROOT/demo/demo-1080p-final.mp4"
-
-# Preview GIF (first ~12s + middle beat) — full length is large; make 1600px overview
+# Preview GIF for README embeds
 ffmpeg -y -i "$FINAL" \
   -vf "fps=10,scale=1280:-1:flags=lanczos,split[s0][s1];[s0]palettegen=max_colors=128[p];[s1][p]paletteuse=dither=bayer" \
   "$ROOT/demo/demo-story-preview.gif" </dev/null
