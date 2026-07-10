@@ -44,7 +44,7 @@ CI (`.github/workflows/ci.yml`): Linux/macOS/Windows × Node 20/22/24. `engines.
 
 ## Publish status
 
-v0.2.0 is on npm as **`@bhaskarauthor/mcp-sync`** (unscoped `mcp-sync` blocked by npm similarity to `mcpsync`). Binary name stays `mcp-sync`. Cold check: `npx @bhaskarauthor/mcp-sync@latest status`.
+v0.2.0 is on npm as **`mcp-sync-cli`** (unscoped `mcp-sync` blocked by npm similarity to `mcpsync`). Binary name stays `mcp-sync`. Cold check: `npx mcp-sync-cli@latest status`.
 
 ## Roadmap (priority)
 
