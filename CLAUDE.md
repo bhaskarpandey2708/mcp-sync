@@ -44,13 +44,13 @@ CI (`.github/workflows/ci.yml`): Linux/macOS/Windows × Node 20/22/24. `engines.
 
 ## Publish status
 
-v0.1.0 shipped on GitHub (2026-07-08). This tree is **v0.2.0** (hardening). Remaining owner-only: `npm login && npm publish`, then verify `npx mcp-sync@latest status` before any launch posts.
+v0.2.0 is on npm as **`@bhaskarauthor/mcp-sync`** (unscoped `mcp-sync` blocked by npm similarity to `mcpsync`). Binary name stays `mcp-sync`. Cold check: `npx @bhaskarauthor/mcp-sync@latest status`.
 
 ## Roadmap (priority)
 
 See `READINESS.md` for full gates. Short list:
 
-1. npm publish + launch (ops)
+1. Launch posts + directory submissions (ops)
 2. Secret redaction in JSON/logs
 3. Codex CLI TOML adapter (v0.2 product headline)
 4. Project-local config scopes

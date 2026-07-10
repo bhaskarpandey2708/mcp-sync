@@ -22,7 +22,7 @@ as we push toward full automation and production robustness.
 | **Automation** | No machine-readable output / stable exit codes for CI | Medium | **Fixed** — `--json` + exit codes |
 | **Audit trail** | Backups had no manifest of what changed | Medium | **Fixed** — `manifest.json` per stamp |
 | **Tests** | No CLI integration tests; no apply/lock/restore coverage | Medium | **Fixed** — expanded suite |
-| **Publish** | npm not published — blocks launch | Blocker (ops) | Owner: `npm login && npm publish` |
+| **Publish** | npm package name | Done as `@bhaskarauthor/mcp-sync` | Unscoped `mcp-sync` blocked (similarity to `mcpsync`) |
 | **Formats** | JSON-only; Codex TOML / Zed / Cline missing | Product | Ready to land on solid base |
 | **Scopes** | User-global configs only (no project `.cursor/mcp.json`) | Product | Planned |
 | **Watch/auto** | No daemon / file-watch auto-sync | Product | Planned after lock+validate proven |

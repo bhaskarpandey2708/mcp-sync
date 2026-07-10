@@ -1,7 +1,7 @@
 # mcp-sync
 
 [![CI](https://github.com/bhaskarpandey2708/mcp-sync/actions/workflows/ci.yml/badge.svg)](https://github.com/bhaskarpandey2708/mcp-sync/actions/workflows/ci.yml)
-[![npm](https://img.shields.io/npm/v/mcp-sync)](https://www.npmjs.com/package/mcp-sync)
+[![npm](https://img.shields.io/npm/v/@bhaskarauthor/mcp-sync)](https://www.npmjs.com/package/@bhaskarauthor/mcp-sync)
 [![zero dependencies](https://img.shields.io/badge/dependencies-0-brightgreen)](package.json)
 [![license: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
@@ -14,8 +14,8 @@ You added your MCP servers to Claude Desktop. Then you set them up again in Curs
 `mcp-sync` fixes that:
 
 ```bash
-npx mcp-sync status          # see every client and what's out of sync
-npx mcp-sync sync --from cursor   # make everything match Cursor
+npx @bhaskarauthor/mcp-sync status          # see every client and what's out of sync
+npx @bhaskarauthor/mcp-sync sync --from cursor   # make everything match Cursor
 ```
 
 ```
@@ -57,13 +57,13 @@ Coming soon (PRs welcome — these are [good first issues](../../issues)): OpenA
 No install needed:
 
 ```bash
-npx mcp-sync status
+npx @bhaskarauthor/mcp-sync status
 ```
 
 Or globally:
 
 ```bash
-npm i -g mcp-sync
+npm i -g @bhaskarauthor/mcp-sync
 ```
 
 Requires Node 20+.
@@ -102,22 +102,22 @@ mcp-sync clients                   List supported clients and their config paths
 
 ```bash
 # Preview what syncing from Claude Desktop would change
-npx mcp-sync sync --from claude-desktop --dry-run
+npx @bhaskarauthor/mcp-sync sync --from claude-desktop --dry-run
 
 # Push your Cursor setup to VS Code and Claude Code only
-npx mcp-sync sync --from cursor --to vscode,claude-code
+npx @bhaskarauthor/mcp-sync sync --from cursor --to vscode,claude-code
 
 # Nuke-and-pave: make every client exactly match Claude Code
-npx mcp-sync sync --from claude-code --replace --yes
+npx @bhaskarauthor/mcp-sync sync --from claude-code --replace --yes
 
 # Health check + CI-friendly drift signal
-npx mcp-sync validate
-npx mcp-sync status --json   # exit 1 if out of sync
+npx @bhaskarauthor/mcp-sync validate
+npx @bhaskarauthor/mcp-sync status --json   # exit 1 if out of sync
 
 # Undo the last sync
-npx mcp-sync backups
-npx mcp-sync restore --latest --dry-run
-npx mcp-sync restore --latest
+npx @bhaskarauthor/mcp-sync backups
+npx @bhaskarauthor/mcp-sync restore --latest --dry-run
+npx @bhaskarauthor/mcp-sync restore --latest
 ```
 
 ## How sync works

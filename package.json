@@ -1,6 +1,9 @@
 {
-  "name": "mcp-sync",
+  "name": "@bhaskarauthor/mcp-sync",
   "version": "0.2.0",
+  "publishConfig": {
+    "access": "public"
+  },
   "description": "Keep MCP server configs in sync across Claude Desktop, Claude Code, Cursor, VS Code, Windsurf, Gemini CLI, and GitHub Copilot CLI. Atomic writes, backups, validate/restore, zero dependencies.",
   "type": "module",
   "bin": {
