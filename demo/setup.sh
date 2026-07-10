@@ -4,7 +4,8 @@
 set -e
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-H="/tmp/home"
+# Short home so paths stay readable on a 1080p terminal capture
+H="/tmp/ms"
 rm -rf "$H"
 mkdir -p "$H"
 

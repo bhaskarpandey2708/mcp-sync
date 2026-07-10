@@ -265,7 +265,7 @@ export function validateStates(states: ClientState[]): ValidationIssue[] {
       issues.push({
         severity: "info",
         clientId: s.def.id,
-        message: `not detected (${s.def.configPath})`,
+        message: "not detected",
       });
       continue;
     }

@@ -1,63 +1,68 @@
-# 1080p launch demo — from repo root:
+# Big, readable 1080p launch demo — from repo root:
 #   vhs demo/demo-1080p.tape
 #
-# Primary output: demo/demo-1080p.mp4 (1920×1080)
+# Design goals:
+#   - Font large enough to read on mobile after Reddit re-encode
+#   - Minimal empty chrome — content fills the frame
+#   - One command per screen (clear between steps)
 
 Output demo/demo-1080p.mp4
 
 Set Shell "bash"
-Set FontSize 24
+Set FontSize 42
 Set FontFamily "Menlo"
 Set Width 1920
 Set Height 1080
-Set Padding 28
-Set Margin 16
-Set MarginFill "#11111b"
+Set Padding 48
+Set Margin 0
 Set Framerate 30
-Set TypingSpeed 35ms
+Set TypingSpeed 45ms
 Set Theme "Catppuccin Mocha"
 Set WindowBar "Colorful"
-Set WindowBarSize 36
-Set BorderRadius 10
+Set WindowBarSize 32
+Set BorderRadius 0
 
 Hide
 Type `export HOME="$(sh demo/setup.sh)" && export PATH="$HOME/bin:$PATH" && clear`
 Enter
-Sleep 2s
+Sleep 1500ms
 Show
 
-# 1 — drift
+# ─── Screen 1: the problem ───
 Type "mcp-sync status"
 Enter
-Sleep 5s
+Sleep 6s
 
-# 2 — safe preview
+# ─── Screen 2: dry-run preview ───
 Type "clear"
 Enter
-Sleep 400ms
+Sleep 500ms
 Type "mcp-sync sync --from cursor --dry-run"
 Enter
-Sleep 5s
+Sleep 6s
 
-# 3 — apply + backups
+# ─── Screen 3: apply ───
 Type "clear"
 Enter
-Sleep 400ms
+Sleep 500ms
 Type "mcp-sync sync --from cursor"
 Enter
-Sleep 5s
+Sleep 6s
 
-# 4 — all green
+# ─── Screen 4: all green ───
 Type "clear"
 Enter
-Sleep 400ms
+Sleep 500ms
 Type "mcp-sync status"
 Enter
-Sleep 4s
+Sleep 5s
 
-# 5 — validate
+# ─── Screen 5: validate ───
+Type "clear"
+Enter
+Sleep 500ms
 Type "mcp-sync validate"
 Enter
-Sleep 4s
+Sleep 5s
 
 Sleep 2s

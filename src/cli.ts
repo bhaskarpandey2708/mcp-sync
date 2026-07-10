@@ -39,6 +39,15 @@ function describe(server: McpServer): string {
   return `${server.type} ${server.url}`;
 }
 
+/** Home-relative (~) path for readable terminal output. */
+function shortPath(p: string): string {
+  const home = process.env.HOME ?? "";
+  if (home && (p === home || p.startsWith(home + "/") || p.startsWith(home + "\\"))) {
+    return "~" + p.slice(home.length).replaceAll("\\", "/");
+  }
+  return p.replaceAll("\\", "/");
+}
+
 function version(): string {
   try {
     const pkg = JSON.parse(
@@ -88,22 +97,33 @@ function cmdStatus(): number {
   }
 
   console.log(bold("MCP clients"));
+  const missing = states.filter((s) => !s.exists);
   for (const s of states) {
+    if (!s.exists) continue; // summarize missing at the end — cleaner on large screens
     const count = Object.keys(s.servers).length;
     let line: string;
     if (s.error) {
-      line = `${red("✗")} ${s.def.name.padEnd(20)} config error: ${s.error}`;
-    } else if (s.exists) {
-      line = `${green("●")} ${s.def.name.padEnd(20)} ${count} server${count === 1 ? "" : "s"}  ${dim(s.def.configPath)}`;
+      line = `${red("✗")} ${bold(s.def.name.padEnd(18))} ${red("config error")}`;
+      console.log("  " + line);
+      console.log(dim(`      ${s.error}`));
     } else {
-      line = `${dim("○")} ${dim(s.def.name.padEnd(20))} ${dim("not detected")}`;
+      // Big, scannable rows — full path lives on `mcp-sync clients`
+      const n = `${count} server${count === 1 ? "" : "s"}`;
+      line = `${green("●")}  ${bold(s.def.name.padEnd(20))} ${green(n)}`;
+      console.log("  " + line);
     }
-    console.log("  " + line);
     if (s.warnings?.length) {
       for (const w of s.warnings) {
         console.log(dim(`      ⚠ ${w}`));
       }
     }
+  }
+  if (missing.length > 0) {
+    console.log(
+      dim(
+        `  ○ not installed: ${missing.map((s) => s.def.name).join(", ")}`,
+      ),
+    );
   }
 
   if (detected.length > 1) {
@@ -115,14 +135,12 @@ function cmdStatus(): number {
     } else {
       console.log(
         yellow(
-          `  ⚠ ${drifted.length} of ${rows.length} servers out of sync: ${drifted
-            .map((r) => r.name)
-            .join(", ")}`,
+          `  ⚠ ${drifted.length} of ${rows.length} out of sync: ${bold(
+            drifted.map((r) => r.name).join(", "),
+          )}`,
         ),
       );
-      console.log(
-        dim("  Run `mcp-sync diff` for details, `mcp-sync sync --from <client>` to fix."),
-      );
+      console.log(dim("  →  mcp-sync diff   |   mcp-sync sync --from <client>"));
     }
   }
   return drifted.length > 0 ? 1 : 0;
@@ -215,7 +233,7 @@ function cmdClients(): number {
   }
   console.log(bold("Supported clients"));
   for (const def of clients) {
-    console.log(`  ${def.id.padEnd(16)} ${def.name.padEnd(20)} ${dim(def.configPath)}`);
+    console.log(`  ${def.id.padEnd(16)} ${def.name.padEnd(20)} ${dim(shortPath(def.configPath))}`);
   }
   return 0;
 }
@@ -537,18 +555,15 @@ function cmdSync(flags: SyncFlags): number {
   } else {
     for (const r of results) {
       if (r.ok && r.backupPath) {
-        console.log(dim(`      backup (${r.clientId}): ${r.backupPath}`));
+        console.log(dim(`      ↺ backup ${r.clientId}`));
       } else if (!r.ok) {
         console.log(red(`      failed (${r.clientId}): ${r.error}`));
       }
     }
     if (results.some((r) => r.ok)) {
       console.log();
-      console.log(
-        green(
-          `Done (backup stamp ${stamp}). Restart the affected apps to pick up the new servers.`,
-        ),
-      );
+      console.log(green(`✓ Done. Backups: ~/.mcp-sync/backups/${stamp}/`));
+      console.log(dim("  Restart the affected apps to load the new servers."));
     }
   }
 
