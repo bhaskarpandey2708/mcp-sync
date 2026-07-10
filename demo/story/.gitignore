@@ -1,3 +1,6 @@
+# Intermediate build artifacts (regenerate with build-story-demo.sh)
 *.mp4
 concat.txt
-!slides/
+frames/
+audio/
+manifest.json
