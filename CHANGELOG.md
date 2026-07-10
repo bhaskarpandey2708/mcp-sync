@@ -4,7 +4,7 @@
 
 Hardening release — foundation for automation without data loss.
 
-Published to npm as **`mcp-sync-cli`** (unscoped `mcp-sync` and scoped `@bhaskarauthor/mcp-sync` hit npm name-policy issues vs existing `mcpsync`). CLI binary remains `mcp-sync` (`npx mcp-sync-cli` / `npm i -g mcp-sync-cli`).
+Published to npm as **`mcp-config-sync`** (unscoped `mcp-sync` and scoped `@bhaskarauthor/mcp-sync` hit npm name-policy issues vs existing `mcpsync`). CLI binary remains `mcp-sync` (`npx mcp-config-sync` / `npm i -g mcp-config-sync`).
 
 ### Correctness
 - **SSE round-trip fix:** plain-style denormalize now emits `type: "sse"` so sync no longer rewrites SSE servers as HTTP

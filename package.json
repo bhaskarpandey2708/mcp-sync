@@ -1,5 +1,5 @@
 {
-  "name": "mcp-sync-cli",
+  "name": "mcp-config-sync",
   "version": "0.2.0",
   "description": "Keep MCP server configs in sync across Claude Desktop, Claude Code, Cursor, VS Code, Windsurf, Gemini CLI, and GitHub Copilot CLI. Atomic writes, backups, validate/restore, zero dependencies.",
   "type": "module",

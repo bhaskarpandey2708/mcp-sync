@@ -592,14 +592,14 @@ ${bold("Global")}
   --version, -v              Print version
 
 ${bold("Examples")}
-  npx mcp-sync-cli status
-  npx mcp-sync-cli validate
-  npx mcp-sync-cli sync --from claude-desktop --dry-run
-  npx mcp-sync-cli sync --from cursor --to vscode,claude-code
-  npx mcp-sync-cli sync --from cursor --replace --yes
-  npx mcp-sync-cli backups
-  npx mcp-sync-cli restore --latest --dry-run
-  npx mcp-sync-cli status --json
+  npx mcp-config-sync status
+  npx mcp-config-sync validate
+  npx mcp-config-sync sync --from claude-desktop --dry-run
+  npx mcp-config-sync sync --from cursor --to vscode,claude-code
+  npx mcp-config-sync sync --from cursor --replace --yes
+  npx mcp-config-sync backups
+  npx mcp-config-sync restore --latest --dry-run
+  npx mcp-config-sync status --json
 
 Safety: every write is atomic, locked, and backed up under ~/.mcp-sync/backups/
 `;
