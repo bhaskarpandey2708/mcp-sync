@@ -9,7 +9,7 @@
 
 ![mcp-sync story demo: problem → solution → live fix](demo/demo-story-preview.gif)
 
-[Full 1080p story demo (MP4, ~72s)](demo/demo-story-1080p.mp4) — problem, solution, then live terminal. Rebuild with `sh demo/build-story-demo.sh`.
+[Full 1080p story demo (MP4, ~108s)](demo/demo-story-1080p.mp4) — CTA first, what MCP is, problem → fix → live terminal (readable, no zoom thrash). Rebuild with `sh demo/build-story-demo.sh`.
 
 You added your MCP servers to Claude Desktop. Then you set them up again in Cursor. Then again in Claude Code, VS Code, Windsurf... and now they've all drifted apart — different versions, different flags, one missing an API key.
 
