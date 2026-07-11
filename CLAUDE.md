@@ -3,7 +3,9 @@
 Zero-dependency TypeScript CLI that syncs MCP server configs across AI clients (Claude Desktop, Claude Code, Cursor, VS Code, Windsurf, Gemini CLI, Copilot CLI).
 
 - GitHub: https://github.com/bhaskarpandey2708/mcp-sync
-- Strategy docs (parent dir): `../claude-for-oss-roadmap.md`, `../LAUNCH-PLAYBOOK.md`
+- Workspace home: `/Users/bhaskar_pandey/Documents/development/mcp-sync` (suite monorepo sibling; own git remote)
+- Suite orientation: `../CLAUDE.md`, `../SOFTWARE_PORTFOLIO_INDEX.md` (P03)
+- Launch pack: `docs/launch/` (Reddit / X / LinkedIn / playbook)
 - Hardening roadmap: `READINESS.md`
 - Growth must be legitimate — never suggest fake stars or download inflation.
 
