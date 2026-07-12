@@ -22,7 +22,9 @@
     "test:watch": "vitest",
     "test:matrix": "vitest run tests/param-matrix.test.ts",
     "test:all": "vitest run",
-    "prepublishOnly": "npm run build && npm test"
+    "prepublishOnly": "npm run build && npm test",
+    "cycle:check": "node --test tests/cycle.test.mjs",
+    "test:cycle": "node --test tests/cycle.test.mjs"
   },
   "keywords": [
     "mcp",
